@@ -7,8 +7,6 @@ from .forms import RegisterForm, LoginForm, QuestionForm
 
 from flask_login import login_user, logout_user, login_required, current_user
 
-
-
 @main.route("/")
 def index():
     return redirect(url_for("main.home"))
@@ -29,7 +27,7 @@ def login():
             return redirect(url_for("main.login"))
         login_user(user, remember=True)
         session["username"] = user.username
-        return redirect(url_for("questions"))
+        return redirect(url_for("main.questions"))
         
     return render_template("login.html", form=form)
 
@@ -41,9 +39,8 @@ def register():
     if(form.validate_on_submit()):
         username = form.username.data
         password = form.password.data
-        email = form.email.data
         ##password = generate_password_hash(password)
-        createUser(username, password, email)
+        createUser(username, password)
         return redirect(url_for("main.login"))
         
     return render_template("register.html", form=form)
@@ -66,10 +63,17 @@ def questions():
 @main.route("/database", methods = ["GET", "POST"])
 def database():
     users = User.query.all()
-    return render_template("database.html", users=users)
+    return render_template("databases.html", users=users)
 
-def createUser(username, password, email):
-    user = User(username=username, password=password, email=email)
+@main.before_app_first_request
+def create_tables():
+    db.create_all()
+    #new_user = User(username="admin", password="admin")
+    #db.session.add(new_user)
+    db.session.commit()
+
+def createUser(username, password):
+    user = User(username=username, password=password)
     db.session.add(user)
     db.session.commit()
 

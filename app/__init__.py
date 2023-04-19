@@ -31,6 +31,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
     Bootstrap(app)
     
+    
     db.init_app(app)
     login_manager.init_app(app)
     nav.init_app(app)

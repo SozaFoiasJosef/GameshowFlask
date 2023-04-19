@@ -10,7 +10,8 @@
     <form method="POST" action="{{ url_for('main.register') }}">
         {{ form.csrf_token() }}
         <div class="form-group">
-            {{ form.username.label }} {{ form.username() }}
+            <label for="username">Username:</label>
+            {{ form.username() }}
             {% for error in form.username.errors %}
             <span class="text-danger">{{ error }}</span>
             {% endfor %}
@@ -27,9 +28,10 @@
             <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <div class="d-flex justify-content-center">
+        <!-- <div class="d-flex justify-content-center">
             {{ form.submit(class="btn btn-primary") }}
-        </div>
+        </div> -->
+        <div class="d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
     </form>
 </div>
 {% endblock %}
