@@ -128,8 +128,8 @@ class Item(object):
         return ItemReference(self.endpoint, self.args)
 
 
-class ItemCollection(collections.MutableSequence,
-                     collections.Iterable):
+class ItemCollection(collections.abc.MutableSequence,
+                     collections.abc.Iterable):
     """The collection of navigation items.
 
     This collection is a mutable sequence. All items have order index, and

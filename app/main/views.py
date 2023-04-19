@@ -7,6 +7,8 @@ from .forms import RegisterForm, LoginForm, QuestionForm
 
 from flask_login import login_user, logout_user, login_required, current_user
 
+
+
 @main.route("/")
 def index():
     return redirect(url_for("main.home"))
@@ -18,13 +20,13 @@ def home():
 @main.route("/login", methods = ["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("questions"))
+        return redirect(url_for("main.questions"))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.verify_password(form.password.data):
             flash("Invalid username or password")
-            return redirect(url_for("login"))
+            return redirect(url_for("main.login"))
         login_user(user, remember=True)
         session["username"] = user.username
         return redirect(url_for("questions"))
@@ -34,7 +36,7 @@ def login():
 @main.route("/register", methods = ["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     form = RegisterForm()
     if(form.validate_on_submit()):
         username = form.username.data
@@ -42,7 +44,7 @@ def register():
         email = form.email.data
         ##password = generate_password_hash(password)
         createUser(username, password, email)
-        return redirect(url_for("login"))
+        return redirect(url_for("main.login"))
         
     return render_template("register.html", form=form)
 

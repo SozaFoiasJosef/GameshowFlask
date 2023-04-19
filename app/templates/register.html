@@ -3,12 +3,33 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-center">
     <h1>Register</h1>
-    <form method="post">
-        {{ form.csrf_token }}
-        {{ form.username.label }} {{ form.username(size=32) }}<br>
-        {{ form.password.label }} {{ form.password(size=32) }}<br>
-        {{ form.confirm_password.label }} {{ form.confirm_password(size=32) }}<br>
-        {{ form.submit() }}
+</div>
+<div class="d-flex justify-content-center">
+    <form method="POST" action="{{ url_for('main.register') }}">
+        {{ form.csrf_token() }}
+        <div class="form-group">
+            {{ form.username.label }} {{ form.username() }}
+            {% for error in form.username.errors %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label }} {{ form.password() }}
+            {% for error in form.password.errors %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.confirm_password.label }} {{ form.confirm_password() }}
+            {% for error in form.confirm_password.errors %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="d-flex justify-content-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
     </form>
+</div>
 {% endblock %}
