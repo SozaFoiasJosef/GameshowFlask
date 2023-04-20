@@ -16,7 +16,12 @@
     <tbody>
         {% for user in users %}
         <tr>
-            <th>{{user.username}}</th>
+            {% if user.username == current_user.username %}
+            <th style="color: green;">@{{user.username}}</th>
+            {% else %}
+            <th>@{{user.username}}</th>
+            {% endif %}
+
             <th>{{user.points}}</th>
         </tr>
         {% endfor %}

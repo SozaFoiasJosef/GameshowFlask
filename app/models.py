@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
 class Answer(UserMixin, db.Model):
     __tablename__ = "answers"
     id = db.Column(db.Integer, primary_key=True)
-    answer = db.Column(db.String(64), unique=True, index=True)
+    answer = db.Column(db.String(64), unique=False, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):

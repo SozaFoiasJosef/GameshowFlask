@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="text-center">Home</h1>
+<!-- <h1 class="text-center d-flex justify-content-center my-5">Home</h1> -->
+<h1 class="text-center d-flex justify-content-center my-5" style="color: green;">@{{current_user.username}}</h1>
 <div class="d-grid gap-2 col-6 mx-auto">
-  <a class="btn btn-outline-primary" href="{{url_for('main.login')}}" role="button">Login</a>
-  <a class="btn btn-outline-primary" href="{{url_for('main.register')}}" role="button">Register</a>
-  <a class="btn btn-outline-danger" href="{{url_for('main.logout')}}" role="button">Logout</a>
+  <a class="btn btn-outline-primary btn-lg d-flex justify-content-center my-5" href="{{url_for('main.login')}}" role="button">Login</a>
+  <a class="btn btn-outline-primary btn-lg d-flex justify-content-center my-5" href="{{url_for('main.register')}}" role="button">Register</a>
+  <a class="btn btn-outline-danger btn-lg d-flex justify-content-center my-5" href="{{url_for('main.logout')}}" role="button">Logout</a>
 </div>
 {% endblock %}

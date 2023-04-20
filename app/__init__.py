@@ -7,7 +7,7 @@ from flask_session import Session
 from config import config
 from flask_bootstrap import Bootstrap
 from flask_navigation import Navigation
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
@@ -16,10 +16,10 @@ db = SQLAlchemy()
 
 nav = Navigation()
 nav.Bar('top', [
-    nav.Item('Home', 'main.home'),
-    nav.Item('Buzzer', 'main.buzzer'),
-    nav.Item('Questions', 'main.questions'),
-    nav.Item('Leaderboard', 'main.leaderboard'),
+    nav.Item('<i class="bi bi-house-fill" style="font-size: 2rem;"></i>', 'main.home'),
+    nav.Item('<i class="bi bi-alarm-fill" style="font-size: 2rem;"></i>', 'main.buzzer'),
+    nav.Item('<i class="bi bi-question-lg" style="font-size: 2rem;"></i>', 'main.questions'),
+    nav.Item('<i class="bi bi-bar-chart-line-fill" style="font-size: 2rem;"></i>', 'main.leaderboard'),
 ])
 
 

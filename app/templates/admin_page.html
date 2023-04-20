@@ -4,45 +4,60 @@
 
 {% block content %}
 
-    <div class="row justify-content-evenly my-1">
-        <div class="col-4">
-            <h1 class="d-flex justify-content-center">Admin Page</h1>
-        </div>
-        <div class="col-4">
-            <form action="/resetBuzzer" method="post" class="text-end">
-                <button type="submit" class="btn btn-danger">Reset Buzzer</button>
-            </form>
-        </div>
+<div class="row justify-content-evenly my-1">
+    <div class="col-4">
+        <h1 class="d-flex justify-content-center">Admin Page</h1>
     </div>
+    <div class="col-4">
+        <form action="/resetBuzzer" method="post" class="text-end">
+            <button type="submit" class="btn btn-danger">Reset Buzzer</button>
+        </form>
+    </div>
+</div>
 
 
-<table class="table table-striped">
-    <tr>
-        <th>Username</th>
-        <th>Points</th>
-        <th>Buzzed</th>
-        <th>Answer</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <th>{{user.username}}</th>
-        <th>{{user.points}}</th>
-        <th>
-            {% if user.username == first_user.username %}
-            <button type="button" class="btn btn-success"></button>
-            {% else %}
-            <button type="button" class="btn btn-danger"></button>
-            {% endif %}
-        </th>
-        {% for answer in answers %}
-        <th>
-            {% if user.username == answer %}
-            {{answer.answer}}
-            {% endif %}
-        </th>
+<table class="table table-striped text-center">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Points</th>
+            <th>Edit Points</th>
+            <th>Buzzed</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <th scope="row"><a class="btn btn-link" href="/{{user.username}}">{{user.username}}</button></th>
+            <td class="text-center">
+                {{user.points}}
+            </td>
+            <td class="text-center">
+                <form method="POST" action="{{ url_for('main.edit_points', id=user.id) }}">
+                    {{ form.csrf_token }}
+                    <div class="d-flex justify-content-center">{{form.points()}}<button type="submit"
+                            class="btn btn-primary mx-1">Submit</button></div>
+                </form>
+            </td>
+            <td class="text-center">
+                {% if user.username == first_user.username %}
+                <button type="button" class="btn btn-success"></button>
+                {% else %}
+                <button type="button" class="btn btn-danger"></button>
+                {% endif %}
+            </td>
+
+            <!-- <td>
+                {% for answer in answers %}
+                {% if user.id == answer.user_id %}
+                {{answer.answer}}
+                {% endif %}
+                {% endfor %}
+
+            </td> -->
+        </tr>
         {% endfor %}
-    </tr>
-    {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}

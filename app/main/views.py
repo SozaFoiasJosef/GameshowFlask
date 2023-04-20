@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash, request
 from . import main
 from .. import db
 from ..models import User, Answer
-from .forms import RegisterForm, LoginForm, QuestionForm
+from .forms import RegisterForm, LoginForm, QuestionForm, EditPointsForm
 
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -72,7 +72,7 @@ def questions():
 
 @main.route("/leaderboard", methods=["GET", "POST"])
 def leaderboard():
-    users = User.query.all()
+    users = User.query.order_by(User.points.desc()).all()
     return render_template("leaderboard.html", users=users)
 
 
@@ -99,8 +99,21 @@ def admin_page():
     users = User.query.all()
     global buzzer_status, first_user
     answers = Answer.query.all()
-    return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers)
+    form = EditPointsForm()
+    
+    return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers, form=form)
 
+@main.route('/edit_points/<int:id>', methods=['POST'])
+def edit_points(id):
+    user = User.query.get(id)
+    form = EditPointsForm()
+
+    if form.validate_on_submit():
+        points = int(form.points.data)
+        user.points += points
+        db.session.commit()
+
+    return redirect(url_for('main.admin_page'))
 
 @main.route("/<username>", methods=["GET", "POST"])
 @login_required
@@ -140,4 +153,6 @@ def resetBuzzer():
     first_user = None
     users = User.query.all()
     answers = Answer.query.all()
-    return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers)
+    
+    form = EditPointsForm()
+    return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers,form=form)
