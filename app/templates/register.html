@@ -3,27 +3,27 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center my-5">
     <h1>Register</h1>
 </div>
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center container-fluid my-5">
     <form method="POST" action="{{ url_for('main.register') }}">
         {{ form.csrf_token() }}
-        <div class="form-group">
-            <label for="username">Username:</label>
-            {{ form.username() }}
+        <div class="input-group flex-nowrap container-fluid">
+            <span class="input-group-text" id="addon-wrapping">@</span>
+            <input id="username" name="username" type="text" class="form-control" placeholder="Username" value="" type="text" aria-label="Username" aria-describedby="addon-wrapping">
             {% for error in form.username.errors %}
             <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <div class="form-group">
-            {{ form.password.label }} {{ form.password() }}
+        <div class="input-group flex-nowrap container-fluid my-5">
+            <input id="password" name="password" type="text" class="form-control" placeholder="Password" value="" type="text" aria-label="Password" aria-describedby="addon-wrapping">
             {% for error in form.password.errors %}
             <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <div class="form-group">
-            {{ form.confirm_password.label }} {{ form.confirm_password() }}
+        <div class="input-group flex-nowrap container-fluid my-5">
+            <input id="confirm_password" name="confirm_password" type="text" class="form-control" placeholder="Confirm Password" value="" type="text" aria-label="Confirm Password" aria-describedby="addon-wrapping">
             {% for error in form.confirm_password.errors %}
             <span class="text-danger">{{ error }}</span>
             {% endfor %}

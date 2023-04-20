@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Buzzer{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center my-5">
+    <h1>Buzzer</h1>
+</div>
+</ul>
+<form action="/pressed" method="post" class="text-center my-5">
+    <button type="submit" style="border-width: 0px background-color ;"><img
+            src="https://t3.ftcdn.net/jpg/00/41/32/34/360_F_41323456_0bG2D3jHzA4sNQXZklu42WN5o16OLDDB.jpg" alt="button"> </button>
+</form>
+{% if buzzer_status %}
+
+<div class="d-flex justify-content-center my-5">
+    <p>Buzzer has been pressed by {{ first_user.username }}!</p>
+</div>
+{% endif %}
+{% endblock %}

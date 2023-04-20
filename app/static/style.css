@@ -1,86 +1,61 @@
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    justify-content: center;
-    display:flex;
-  }
-  
-  li {
-    float: left;
-    border-right: 1px solid white;
-  }
-  
-  li:last-child {
-    border-right: none;
-  }
-  
-  li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-  }
-  
-  li a:hover {
-    background-color: #111;
-  }
-  
-  .active {
-    background-color: gray;
-  }
-  
-  .container {
-    margin: 0 auto;
-    margin-top: 2%;
-    width: 90%;
-    max-width:fit-content;
-    display:flex;
-    text-align: center;
-  }
-  
-  p.content {
-    font-family:'Courier New', Courier, monospace;
-    font-weight: bold;
-  }
-  
-  table {
-    border-collapse: collapse;
-    width:100%;
-  }
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
+  display: flex;
+}
 
-  th, td {
-    text-align: left;
-    padding: 50px;
-  }
-  
-  tr:nth-child(even) {
-    background-color: lightgray;
-  }
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
 
-  .table-title {
-    font-weight: bold;
-    text-align: left;
-    font-size: 24px;
-  }
+.container {
+  margin: 0 auto;
+  margin-top: 2%;
+  width: 90%;
+  max-width: fit-content;
+  display: flex;
+  text-align: center;
+}
 
-  .table-text {
-    text-align: center;
-  }
+p.content {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+}
 
-  .form {
-    padding:12.5px;
-    margin:25px;
-    background-color: #F7EF99;
-    border-radius: 25px;
-  }
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-  button {
-    font-size: large;
-    border-radius: 20px;
-  }
+th,
+td {
+  text-align: left;
+  padding: 50px;
+}
 
-  button:hover {
-    background-color: lightgray;
-  }
+tr:nth-child(even) {
+  background-color: lightgray;
+}
+
+.table-title {
+  font-weight: bold;
+  text-align: left;
+  font-size: 24px;
+}
+
+.table-text {
+  text-align: center;
+}
+
+.form {
+  padding: 12.5px;
+  margin: 25px;
+  background-color: #F7EF99;
+  border-radius: 25px;
+}

@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    points = db.Column(db.Integer, default=0)
 
     @property
     def password(self):

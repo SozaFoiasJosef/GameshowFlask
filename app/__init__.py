@@ -15,15 +15,14 @@ login_manager.login_view = "main.login"
 db = SQLAlchemy()
 
 nav = Navigation()
-
 nav.Bar('top', [
     nav.Item('Home', 'main.home'),
-    nav.Item('Login', 'main.login'),
-    nav.Item('Register', 'main.register'),
-    nav.Item('Logout', 'main.logout'),
+    nav.Item('Buzzer', 'main.buzzer'),
     nav.Item('Questions', 'main.questions'),
-    nav.Item('Database', 'main.database'),
+    nav.Item('Leaderboard', 'main.leaderboard'),
 ])
+
+
 
 def create_app(config_name):
     app = Flask(__name__)

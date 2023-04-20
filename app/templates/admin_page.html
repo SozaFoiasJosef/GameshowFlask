@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-evenly my-1">
+        <div class="col-4">
+            <h1 class="d-flex justify-content-center">Admin Page</h1>
+        </div>
+        <div class="col-4">
+            <form action="/resetBuzzer" method="post" class="text-end">
+                <button type="submit" class="btn btn-danger">Reset Buzzer</button>
+            </form>
+        </div>
+    </div>
+
+
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Points</th>
+        <th>Buzzed</th>
+        <th>Answer</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <th>{{user.username}}</th>
+        <th>{{user.points}}</th>
+        <th>
+            {% if user.username == first_user.username %}
+            <button type="button" class="btn btn-success"></button>
+            {% else %}
+            <button type="button" class="btn btn-danger"></button>
+            {% endif %}
+        </th>
+        {% for answer in answers %}
+        <th>
+            {% if user.username == answer %}
+            {{answer.answer}}
+            {% endif %}
+        </th>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
