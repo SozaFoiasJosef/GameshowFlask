@@ -1,1 +1,26 @@
 {% extends 'base.html' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+
+<table class="table table-striped text-center">
+    <thead>
+        <tr>
+            <th scope="col">Answers</th>
+            <th scope="col">Points</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <th>{{user.username}}</th>
+            <th>{{user.points}}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
