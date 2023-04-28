@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Click Race</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Button Click Race</h1>
+    <form id="usernameForm">
+        <label for="usernameInput">Username:</label>
+        <input type="text" id="usernameInput" name="username">
+        <button type="submit">Submit</button>
+    </form>
+    <button id="clickButton">Click Me</button>
+    <script>
+        // Connect to Socket.IO server
+        var socket = io.connect();
+
+        // Handle form submission
+        $('#usernameForm').on('submit', function(e) {
+            e.preventDefault();
+            // Get the username from the form
+            var username = $('#usernameInput').val();
+            // Emit 'username' event to server with the username data
+            socket.emit('username', {'username': username});
+        });
+
+        // Handle button click
+        $('#clickButton').on('click', function() {
+            // Emit 'button_click' event to server
+            socket.emit('button_click', {'username': $('#usernameInput').val()});
+        });
+
+        // Handle 'winner' event
+        socket.on('winner', function(data) {
+            alert('Congratulations, ' + data.username + '! You are the winner!');
+        });
+
+        // Handle 'loser' event
+        socket.on('loser', function() {
+            alert('Sorry, you are not the winner. Try again!');
+        });
+    </script>
+</body>
+</html>

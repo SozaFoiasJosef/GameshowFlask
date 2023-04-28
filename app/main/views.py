@@ -1,14 +1,18 @@
-from flask import session
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, session, jsonify
 from . import main
+from .. import socketio
 from .. import db
 from ..models import User, Answer
 from .forms import RegisterForm, LoginForm, QuestionForm, EditPointsForm
 
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_socketio import SocketIO, emit
+
 
 buzzer_status = False
 first_user = None
+
+winner = {'username': None}
 
 
 @main.route("/")
@@ -91,7 +95,7 @@ def pressed():
 @login_required
 def buzzer():
     global buzzer_status, first_user
-    return render_template("buzzer.html", buzzer_status=buzzer_status, first_user=first_user)
+    return render_template("buzzer.html", buzzer_status=buzzer_status, first_user=first_user, username=current_user.username)
 
 
 @main.route("/admin_page", methods=["GET", "POST"])
@@ -156,3 +160,20 @@ def resetBuzzer():
     
     form = EditPointsForm()
     return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers,form=form)
+
+@main.route("/buzz", methods=["GET", "POST"])
+def buzz():
+    return render_template("buzz.html")
+
+# Socket.IO event for button click
+@socketio.on('button_click')
+def handle_button_click(data):
+    # Check if winner is already set
+    if winner['username'] is None:
+        # Update winner with the username of the current user
+        winner['username'] = data['username']
+        # Emit a 'winner' event to the current client only
+        emit('winner', {'username': data['username']})
+    else:
+        # Emit a 'loser' event to the current client only
+        emit('loser')

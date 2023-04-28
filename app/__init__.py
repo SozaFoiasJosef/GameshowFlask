@@ -3,16 +3,17 @@ from flask import request
 from flask import session
 from flask import render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_session import Session
 from config import config
 from flask_bootstrap import Bootstrap
 from flask_navigation import Navigation
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager
+from flask_socketio import SocketIO
 
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 
 db = SQLAlchemy()
+socketio = SocketIO()
 
 nav = Navigation()
 nav.Bar('top', [
@@ -29,8 +30,8 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
     Bootstrap(app)
-    
-    
+
+    socketio.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     nav.init_app(app)
