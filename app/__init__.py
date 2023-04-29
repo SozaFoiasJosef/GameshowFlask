@@ -18,7 +18,7 @@ socketio = SocketIO()
 nav = Navigation()
 nav.Bar('top', [
     nav.Item('<i class="bi bi-house-fill" style="font-size: 2rem;"></i>', 'main.home'),
-    nav.Item('<i class="bi bi-alarm-fill" style="font-size: 2rem;"></i>', 'main.buzzer'),
+    nav.Item('<i class="bi bi-alarm-fill" style="font-size: 2rem;"></i>', 'main.buzz'),
     nav.Item('<i class="bi bi-question-lg" style="font-size: 2rem;"></i>', 'main.questions'),
     nav.Item('<i class="bi bi-bar-chart-line-fill" style="font-size: 2rem;"></i>', 'main.leaderboard'),
 ])

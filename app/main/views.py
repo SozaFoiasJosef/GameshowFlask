@@ -12,9 +12,6 @@ from flask_socketio import SocketIO, emit
 buzzer_status = False
 first_user = None
 
-winner = {'username': None}
-
-
 @main.route("/")
 def index():
     return redirect(url_for("main.home"))
@@ -61,7 +58,8 @@ def register():
 def logout():
     current_user.authenticated = False
     logout_user()
-    return render_template("index.html")
+    print("user logged out")
+    return jsonify({'success': True})
 
 
 @main.route("/questions", methods=["GET", "POST"])
@@ -80,24 +78,6 @@ def leaderboard():
     return render_template("leaderboard.html", users=users)
 
 
-@main.route("/pressed", methods=["GET", "POST"])
-def pressed():
-    global buzzer_status, first_user
-    if not buzzer_status:
-        buzzer_status = True
-        first_user = current_user
-        return render_template("buzzer.html", buzzer_status=buzzer_status, first_user=first_user)
-    else:
-        return render_template("buzzer.html", buzzer_status=buzzer_status, first_user=first_user)
-
-
-@main.route("/buzzer", methods=["GET", "POST"])
-@login_required
-def buzzer():
-    global buzzer_status, first_user
-    return render_template("buzzer.html", buzzer_status=buzzer_status, first_user=first_user, username=current_user.username)
-
-
 @main.route("/admin_page", methods=["GET", "POST"])
 def admin_page():
     users = User.query.all()
@@ -106,6 +86,7 @@ def admin_page():
     form = EditPointsForm()
     
     return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers, form=form)
+
 
 @main.route('/edit_points/<int:id>', methods=['POST'])
 def edit_points(id):
@@ -119,6 +100,7 @@ def edit_points(id):
 
     return redirect(url_for('main.admin_page'))
 
+
 @main.route("/<username>", methods=["GET", "POST"])
 @login_required
 def profile(username):
@@ -130,6 +112,11 @@ def profile(username):
     return render_template("profile.html", user=user, answers=answers)
 
 
+@main.route("/buzz", methods=["GET", "POST"])
+@login_required
+def buzz():
+    return render_template("buzz.html", user=current_user)
+
 @main.before_app_first_request
 def create_tables():
     db.create_all()
@@ -140,8 +127,11 @@ def create_tables():
 
 def createUser(username, password):
     user = User(username=username, password=password)
-    db.session.add(user)
-    db.session.commit()
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
 
 
 def createAnswer(answer):
@@ -150,30 +140,26 @@ def createAnswer(answer):
     db.session.commit()
 
 
-@main.route("/resetBuzzer", methods=["GET", "POST"])
-def resetBuzzer():
-    global buzzer_status, first_user
-    buzzer_status = False
-    first_user = None
-    users = User.query.all()
-    answers = Answer.query.all()
-    
-    form = EditPointsForm()
-    return render_template("admin_page.html", users=users, buzzer_status=buzzer_status, first_user=first_user, answers=answers,form=form)
-
-@main.route("/buzz", methods=["GET", "POST"])
-def buzz():
-    return render_template("buzz.html")
-
 # Socket.IO event for button click
-@socketio.on('button_click')
-def handle_button_click(data):
+@socketio.on('buzzer_click')
+def handle_button_click(user_name):
+    global buzzer_status, first_user
     # Check if winner is already set
-    if winner['username'] is None:
-        # Update winner with the username of the current user
-        winner['username'] = data['username']
+    if not buzzer_status:
+        buzzer_status = True
+        first_user = user_name
         # Emit a 'winner' event to the current client only
-        emit('winner', {'username': data['username']})
+        emit('winner',user_name,broadcast=True)
     else:
         # Emit a 'loser' event to the current client only
-        emit('loser')
+        emit('loser',first_user)
+
+# Socket.IO event for reset button click
+@socketio.on('reset_buzzer')
+def handle_reset_button_click():
+    global buzzer_status, first_user
+    print(buzzer_status)
+    print("resetting")
+    buzzer_status = False
+    first_user = ''
+    emit('reset',broadcast=True)

@@ -1,47 +1,57 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Button Click Race</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>Button Click Race</h1>
-    <form id="usernameForm">
-        <label for="usernameInput">Username:</label>
-        <input type="text" id="usernameInput" name="username">
-        <button type="submit">Submit</button>
-    </form>
-    <button id="clickButton">Click Me</button>
-    <script>
-        // Connect to Socket.IO server
-        var socket = io.connect();
+{% extends 'base.html' %}
 
-        // Handle form submission
-        $('#usernameForm').on('submit', function(e) {
-            e.preventDefault();
-            // Get the username from the form
-            var username = $('#usernameInput').val();
-            // Emit 'username' event to server with the username data
-            socket.emit('username', {'username': username});
-        });
+{% block title %}Buzzer{% endblock %}
+{% block content %}
+<div class="row justify-content-evenly my-1">
+    <h1 id="user_name" class="d-flex justify-content-center">{{user.username}}</h1>
+</div>
+<div class="d-flex justify-content-center my-5">
 
-        // Handle button click
-        $('#clickButton').on('click', function() {
-            // Emit 'button_click' event to server
-            socket.emit('button_click', {'username': $('#usernameInput').val()});
-        });
+    <button id="clickButton" type="submit" style="border-width: 0px background-color ;"><img
+            src="https://t3.ftcdn.net/jpg/00/41/32/34/360_F_41323456_0bG2D3jHzA4sNQXZklu42WN5o16OLDDB.jpg" alt="button">
+    </button>
+</div>
+<div class="d-flex justify-content-center my-5" id="reset_message"></div>
+    <div class="d-flex justify-content-center my-5" id="buzzer_message"></div>
+</div>
 
-        // Handle 'winner' event
-        socket.on('winner', function(data) {
-            alert('Congratulations, ' + data.username + '! You are the winner!');
-        });
+{% endblock %}
 
-        // Handle 'loser' event
-        socket.on('loser', function() {
-            alert('Sorry, you are not the winner. Try again!');
-        });
-    </script>
-</body>
-</html>
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Connect to Socket.IO server
+    var socket = io.connect();
+    var user_name = $('#user_name').text();
+
+    // Handle button click
+    $('#clickButton').on('click', function () {
+        // Emit 'button_click' event to server
+        socket.emit('buzzer_click', user_name);
+    });
+
+    // Handle 'winner' event
+    socket.on('winner', function (winner_name) {
+        $('#reset_message').text('');
+        if(winner_name == user_name){
+            $('#buzzer_message').text('Congratulations! You pressed the buzzer first.');
+        }else{
+            $('#buzzer_message').text(winner_name + ' was first');
+        }
+
+    });
+
+    // Handle 'loser' event
+    socket.on('loser', function (winner_name) {
+        $('#reset_message').text('');
+        $('#buzzer_message').text(winner_name + ' was first');
+    });
+
+    // Handle 'reset' event
+    socket.on('reset', function () {
+        $('#reset_message').text('The buzzer has been reset.');
+        $('#buzzer_message').text('');
+    });
+</script>
+{% endblock %}

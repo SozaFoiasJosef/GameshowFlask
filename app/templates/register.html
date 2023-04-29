@@ -6,32 +6,84 @@
 <div class="d-flex justify-content-center my-5">
     <h1>Register</h1>
 </div>
-<div class="d-flex justify-content-center container-fluid my-5">
+<div class="d-flex justify-content-center container-fluid my-5 text-center">
     <form method="POST" action="{{ url_for('main.register') }}">
         {{ form.csrf_token() }}
-        <div class="input-group flex-nowrap container-fluid">
+        <div class="input-group flex-nowrap container-fluid my-2">
             <span class="input-group-text" id="addon-wrapping">@</span>
-            <input id="username" name="username" type="text" class="form-control" placeholder="Username" value="" type="text" aria-label="Username" aria-describedby="addon-wrapping">
-            {% for error in form.username.errors %}
-            <span class="text-danger">{{ error }}</span>
-            {% endfor %}
+            <input id="username" name="username" class="form-control" placeholder="Username" value=""
+                type="text" aria-label="Username" aria-describedby="addon-wrapping">
+
         </div>
-        <div class="input-group flex-nowrap container-fluid my-5">
-            <input id="password" name="password" type="text" class="form-control" placeholder="Password" value="" type="text" aria-label="Password" aria-describedby="addon-wrapping">
-            {% for error in form.password.errors %}
-            <span class="text-danger">{{ error }}</span>
-            {% endfor %}
+        {% for error in form.username.errors %}
+        <span class="text-danger mx-2">{{ error }}</span>
+        {% endfor %}
+        <div class="input-group flex-nowrap container-fluid my-2">
+            <input id="password" name="password" type="password" class="form-control" placeholder="Password" value=""
+                aria-label="Password" aria-describedby="addon-wrapping">
+            <span class="input-group-text togglePassword">
+                <i class="bi bi-eye-slash" id="togglePassword"></i>
+            </span>
         </div>
-        <div class="input-group flex-nowrap container-fluid my-5">
-            <input id="confirm_password" name="confirm_password" type="text" class="form-control" placeholder="Confirm Password" value="" type="text" aria-label="Confirm Password" aria-describedby="addon-wrapping">
-            {% for error in form.confirm_password.errors %}
-            <span class="text-danger">{{ error }}</span>
-            {% endfor %}
+        {% for error in form.password.errors %}
+        <span class="text-danger mx-2">{{ error }}</span>
+        {% endfor %}
+        <div class="input-group flex-nowrap container-fluid my-2">
+            <input id="confirm_password" name="confirm_password" type="password" class="form-control"
+                placeholder="Confirm Password" value="" aria-label="Confirm Password" aria-describedby="addon-wrapping">
+            <span class="input-group-text togglePassword">
+                <i class="bi bi-eye-slash" id="confirm_togglePassword"></i>
+            </span>
         </div>
+        {% for error in form.confirm_password.errors %}
+        <span class="text-danger mx-2">{{ error }}</span>
+        {% endfor %}
         <!-- <div class="d-flex justify-content-center">
             {{ form.submit(class="btn btn-primary") }}
         </div> -->
         <div class="d-flex justify-content-center"><button type="submit" class="btn btn-primary">Submit</button></div>
     </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const togglePassword = document
+        .querySelector('#togglePassword');
+    const confirm_togglePassword = document
+        .querySelector('#confirm_togglePassword');
+
+    const password = document.querySelector('#password');
+    const confirm_password = document.querySelector('#confirm_password');
+
+    togglePassword.addEventListener('click', () => {
+
+        // Toggle the type attribute using
+        // getAttribure() method
+        const type = password
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+
+        password.setAttribute('type', type);
+
+        // Toggle the eye and bi-eye icon
+        togglePassword.classList.toggle('bi-eye');
+    });
+
+    confirm_togglePassword.addEventListener('click', () => {
+
+        // Toggle the type attribute using
+        // getAttribure() method
+
+        const type = confirm_password
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+
+        confirm_password.setAttribute('type', type);
+
+        // Toggle the eye and bi-eye icon
+        confirm_togglePassword.classList.toggle('bi-eye');
+    });
+
+</script>
 {% endblock %}
