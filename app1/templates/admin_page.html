@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+<div class="container justify-content-center">
+    <div class="row justify-content-md-center my-1">
+        <div class="col col-lg-2">
+            <button id="resetPage" type="submit" class="btn btn-warning">Reset
+                Page</button>
+        </div>
+        <div class="col-md-auto">
+            <h1 class="d-flex justify-content-center">Admin Page</h1>
+        </div>
+        <div class="col col-lg-2">
+            <button id="resetButton" type="submit" class="btn btn-danger">Reset
+                Buzzer</button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-evenly my-1">
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Points</th>
+                <th>Edit Points</th>
+                <th>Edit Team</th>
+                <th>Buzzed</th>
+                <th>Recent Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <th scope="row"><a class="btn btn-link"
+                        style="color: {% if user.team == 'Green' %}green{% elif user.team == 'Blue' %}blue{% elif user.team == 'Red' %}red{% endif %};"
+                        href="/{{user.username}}">@{{user.username}}</a></th>
+                <td class="text-center">
+                    {{user.points}}
+                </td>
+                <td class="text-center">
+                    <form method="POST" action="{{ url_for('main.edit_points', id=user.id) }}">
+                        {{ form.csrf_token }}
+                        <div class="d-flex justify-content-center">{{form.points()}}<button type="submit"
+                                class="btn btn-primary mx-1">Submit</button></div>
+                    </form>
+                </td>
+                <td class="text-center">
+                    <select id="teamSelect-{{ user.id }}" data-id="{{user.username}}"
+                        class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                        <option {% if user.team=='Green' %}selected{% endif %} value="Green">Green</option>
+                        <option {% if user.team=='Blue' %}selected{% endif %} value="Blue">Blue</option>
+                        <option {% if user.team=='Red' %}selected{% endif %} value="Red">Red</option>
+                    </select>
+                </td>
+                <td class="text-center">
+                    {% if user.username == first_user %}
+                    <button id="buzzedVar" type="button" class="btn btn-success"></button>
+                    {% else %}
+                    <button id="buzzedVar" type="button" class="btn btn-danger"></button>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {{user.recent_answer}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Connect to Socket.IO server
+    var socket = io.connect();
+
+    // Handle button click
+    $('#resetButton').on('click', function () {
+        // Emit 'button_click' event to server
+        $('buzzedVar').removeClass('btn btn-success');
+        $('buzzedVar').removeClass('btn btn-danger');
+        $('buzzedVar').addClass('btn btn-danger');
+        socket.emit('reset_buzzer');
+        location.reload(true);
+    });
+
+    $('#resetPage').on('click', function () {
+        location.reload(true);
+    });
+
+    // Handle 'winner' event
+    socket.on('winner', function (user_name) {
+        location.reload(true);
+    });
+
+    // Handle 'winner' event
+    socket.on('success', function (user_name) {
+        location.reload(true);
+    });
+</script>
+
+<script type="text/javascript">
+    var socket = io();
+    var selects = document.querySelectorAll('select[data-id]');
+    selects.forEach(function (select) {
+        select.addEventListener('change', function () {
+            socket.emit('edit_team', { team_name: $(this).val(), user_name: $(this).data('id') });
+        });
+    });
+</script>
+{% endblock %}

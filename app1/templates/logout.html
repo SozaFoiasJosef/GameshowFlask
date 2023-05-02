@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %} </ul>
+<h1>Logout Page</h1>
+<p>Are you sure you want to logout?</p>
+<form action="/logout" method="post">
+    <input type="submit" value="Logout">
+</form>
+<div class="d-grid gap-2 col-6 mx-auto">
+    <a class="btn btn-outline-danger" href="{{url_for('main.logout')}}" role="button">Logout</a>
+    <a class="btn btn-outline-primary" href="{{url_for('main.home')}}" role="button">Register</a>
+</div>
+{% endblock %}

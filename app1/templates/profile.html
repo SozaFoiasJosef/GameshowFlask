@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Profile{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-evenly my-1">
+    <div class="col-4">
+        <div class="row justify-content-evenly my-1">
+            <h1 class="d-flex justify-content-center" style="color: {% if user.team == 'Green' %}green{% elif user.team == 'Blue' %}blue{% elif user.team == 'Red' %}red{% endif %};">@{{user.username}}</h1>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row justify-content-evenly my-1" style="color: {% if user.team == 'Green' %}green{% elif user.team == 'Blue' %}blue{% elif user.team == 'Red' %}red{% endif %};">
+            <h1 class="d-flex justify-content-center text-decoration-underline">Points<br>
+                <h1 class="d-flex justify-content-center" >{{user.points}}</h1>
+            </h1>
+        </div>
+    </div>
+</div>
+
+
+<table class="table table-striped text-center">
+    <thead>
+        <tr>
+            <th scope="col">Answers</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for answer in answers %}
+    <tr>
+        <th>{{answer.answer}}</th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Buzzer{% endblock %}
+{% block content %}
+<div class="row justify-content-evenly my-5">
+    <h1 id="user_name" class="d-flex justify-content-center" style="color: {% if user.team == 'Green' %}green{% elif user.team == 'Blue' %}blue{% elif user.team == 'Red' %}red{% endif %};">@{{user.username}}</h1>
+</div>
+<div class="d-flex justify-content-center my-5">
+
+    <button id="clickButton" type="submit" style="border-width: 0px background-color ;"><img
+            src="https://t3.ftcdn.net/jpg/00/41/32/34/360_F_41323456_0bG2D3jHzA4sNQXZklu42WN5o16OLDDB.jpg" alt="button">
+    </button>
+</div>
+<div class="d-flex justify-content-center my-5" id="reset_message"></div>
+    <div class="d-flex justify-content-center my-5" id="buzzer_message"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Connect to Socket.IO server
+    var socket = io.connect();
+    var user_name = $('#user_name').text();
+    var parts = user_name.split('@');
+    user_name = parts[1];
+    // Handle button click
+    $('#clickButton').on('click', function () {
+        // Emit 'button_click' event to server
+        socket.emit('buzzer_click', user_name);
+    });
+
+    // Handle 'winner' event
+    socket.on('winner', function (winner_name) {
+        $('#reset_message').text('');
+        if(winner_name == user_name){
+            $('#buzzer_message').text('Congratulations! You pressed the buzzer first.');
+        }else{
+            $('#buzzer_message').text(winner_name + ' was first');
+        }
+
+    });
+
+    // Handle 'loser' event
+    socket.on('loser', function (winner_name) {
+        $('#reset_message').text('');
+        $('#buzzer_message').text(winner_name + ' was first');
+    });
+
+    // Handle 'reset' event
+    socket.on('reset', function () {
+        $('#reset_message').text('The buzzer has been reset.');
+        $('#buzzer_message').text('');
+    });
+</script>
+{% endblock %}

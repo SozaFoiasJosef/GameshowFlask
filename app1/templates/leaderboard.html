@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+
+
+<table class="table table-striped text-center">
+    <thead>
+        <tr>
+            <th scope="col">Answers</th>
+            <th scope="col">Points</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <th>
+                <a class="btn btn-link"
+                    style="color: {% if user.team == 'Green' %}green{% elif user.team == 'Blue' %}blue{% elif user.team == 'Red' %}red{% endif %}; "
+                    href="/{{user.username}}">@{{user.username}}</a>
+                    {% if user.username == current_user.username %}
+                    <a style="font-weight: bold;">
+                    ( You )</a>
+                    {% endif %}
+            </th>
+            <th>{{user.points}}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
